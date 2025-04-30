@@ -1,0 +1,137 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #ffe6f0;
+    color: #333;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: #ffccdd;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 2em;
+    color: #6a1b4d;
+}
+
+.date-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.date-container img {
+    width: 30px;
+    height: 30px;
+}
+
+.container {
+    padding: 30px;
+    max-width: 800px;
+    margin: auto;
+}
+
+.task-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.task-form input, .task-form select, .task-form button {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 1em;
+}
+
+.task-form button {
+    background-color: #ff6699;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.task-form button:hover {
+    background-color: #e05582;
+}
+
+.filters {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.filter-btn {
+    margin: 5px;
+    padding: 10px 20px;
+    border: none;
+    background-color: #ffc0cb;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.filter-btn:hover {
+    background-color: #ff99b3;
+}
+
+#taskList {
+    list-style: none;
+    padding: 0;
+}
+
+.task-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff0f5;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    border-left: 8px solid #ff6699;
+}
+
+.task-item.completed {
+    opacity: 0.6;
+    text-decoration: line-through;
+    background-color: #f0f0f0;
+}
+
+.priority {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    color: white;
+    font-size: 0.85em;
+    margin-top: 5px;
+}
+
+.priority.low {
+    background-color: #77dd77;
+}
+
+.priority.medium {
+    background-color: #fdfd96;
+    color: #555;
+}
+
+.priority.high {
+    background-color: #ff6961;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.actions button {
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+}

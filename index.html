@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Task List Management</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="header">
+        <h1>📋 Task List Management</h1>
+        <div class="date-container">
+            <span id="currentDate"></span>
+            <img src="https://img.icons8.com/fluency/48/000000/calendar.png" alt="Calendar Icon">
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="task-form">
+            <input type="text" id="taskName" placeholder="Title">
+            <input type="text" id="taskDescription" placeholder="Description">
+            <select id="taskPriority">
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+            </select>
+            <select id="taskCategory">
+                <option value="Health">Health</option>
+                <option value="Study">Study</option>
+                <option value="Work">Work</option>
+                <option value="Personal">Personal</option>
+            </select>
+            <input type="date" id="taskDate">
+            <button id="addTaskBtn">Add Task</button>
+        </div>
+
+        <div class="filters">
+            <button class="filter-btn" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="today">Today</button>
+            <button class="filter-btn" data-filter="pending">Pending</button>
+            <button class="filter-btn" data-filter="completed">Completed</button>
+        </div>
+
+        <ul id="taskList"></ul>
+    </div>
+</body>
+</html>
