@@ -7,17 +7,17 @@
     <script src="script.js" defer></script>
 </head>
 <body>
-    <div class="header">
-        <h1>📋 Task List Management</h1>
-        <div class="date-container">
-            <span id="currentDate"></span>
-            <img src="https://img.icons8.com/fluency/48/000000/calendar.png" alt="Calendar Icon">
-        </div>
-    </div>
-
     <div class="container">
+        <header class="header">
+            <h1>Task List Management</h1>
+            <div class="date-display">
+                <img src="https://img.icons8.com/ios-filled/50/000000/calendar--v1.png" alt="Calendar Icon">
+                <span id="currentDate"></span>
+            </div>
+        </header>
+
         <div class="task-form">
-            <input type="text" id="taskName" placeholder="Title">
+            <input type="text" id="taskTitle" placeholder="Title">
             <input type="text" id="taskDescription" placeholder="Description">
             <select id="taskPriority">
                 <option value="Low">Low</option>
@@ -25,20 +25,20 @@
                 <option value="High">High</option>
             </select>
             <select id="taskCategory">
-                <option value="Health">Health</option>
-                <option value="Study">Study</option>
-                <option value="Work">Work</option>
-                <option value="Personal">Personal</option>
+                <option value="health">Health</option>
+                <option value="studies">Studies</option>
+                <option value="work">Work</option>
             </select>
             <input type="date" id="taskDate">
             <button id="addTaskBtn">Add Task</button>
         </div>
 
         <div class="filters">
-            <button class="filter-btn" data-filter="all">All</button>
-            <button class="filter-btn" data-filter="today">Today</button>
-            <button class="filter-btn" data-filter="pending">Pending</button>
-            <button class="filter-btn" data-filter="completed">Completed</button>
+            <button data-view="all">All</button>
+            <button data-view="day">Day</button>
+            <button data-view="week">Week</button>
+            <button data-view="month">Month</button>
+            <button data-view="year">Year</button>
         </div>
 
         <ul id="taskList"></ul>
