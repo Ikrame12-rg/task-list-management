@@ -1,132 +1,103 @@
-document.addEventListener('DOMContentLoaded', () => {
+let tasks = [];
+
+document.getElementById('addTaskBtn').addEventListener('click', () => {
+    const title = document.getElementById('taskTitle').value.trim();
+    const description = document.getElementById('taskDescription').value.trim();
+    const priority = document.getElementById('taskPriority').value;
+    const category = document.getElementById('taskCategory').value;
+    const dueDate = document.getElementById('taskDate').value;
+
+    if (!title || !dueDate) {
+        alert("Please fill in the title and due date.");
+        return;
+    }
+
+    tasks.push({
+        title,
+        description,
+        priority,
+        category,
+        dueDate,
+        done: false
+    });
+
+    renderTasks();
+    clearForm();
+});
+
+function clearForm() {
+    document.getElementById('taskTitle').value = '';
+    document.getElementById('taskDescription').value = '';
+    document.getElementById('taskPriority').value = 'Low';
+    document.getElementById('taskCategory').value = 'health';
+    document.getElementById('taskDate').value = '';
+}
+
+function renderTasks(filter = "all") {
     const taskList = document.getElementById('taskList');
-    const addTaskBtn = document.getElementById('addTaskBtn');
+    taskList.innerHTML = '';
 
-    const loadTasks = () => {
-        taskList.innerHTML = '';
-        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        tasks.forEach(task => addTaskToDOM(task));
-    };
+    const now = new Date();
 
-    const saveTasks = () => {
-        const tasks = Array.from(document.querySelectorAll('.task-item')).map(item => ({
-            title: item.querySelector('strong').textContent,
-            description: item.querySelector('em').textContent,
-            category: item.querySelector('small').textContent.replace('Category: ', ''),
-            date: item.getAttribute('data-date'),
-            priority: item.querySelector('.priority').textContent,
-            status: item.getAttribute('data-status')
-        }));
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-    };
+    tasks.forEach((task, index) => {
+        const taskDate = new Date(task.dueDate);
+        let show = true;
 
-    const addTaskToDOM = ({ title, description, category, date, priority, status }) => {
-        const taskItem = document.createElement('li');
-        taskItem.classList.add('task-item');
-        if (status === 'completed') taskItem.classList.add('completed');
-        taskItem.setAttribute('data-status', status || 'pending');
-        taskItem.setAttribute('data-date', date);
+        if (filter === 'day') {
+            show = taskDate.toDateString() === now.toDateString();
+        } else if (filter === 'week') {
+            const weekStart = new Date(now);
+            weekStart.setDate(now.getDate() - now.getDay());
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekEnd.getDate() + 6);
+            show = taskDate >= weekStart && taskDate <= weekEnd;
+        } else if (filter === 'month') {
+            show = taskDate.getMonth() === now.getMonth() && taskDate.getFullYear() === now.getFullYear();
+        } else if (filter === 'year') {
+            show = taskDate.getFullYear() === now.getFullYear();
+        }
 
-        taskItem.innerHTML = `
-            <div>
-                <strong>${title}</strong><br>
-                <em>${description}</em><br>
-                <small>Category: ${category}</small><br>
-                <small>Due: ${date}</small><br>
-                <span class="priority ${priority.toLowerCase()}">${priority}</span>
-            </div>
+        if (filter !== "all" && !show) return;
+
+        const li = document.createElement('li');
+        li.className = 'task-item';
+        if (task.done) li.classList.add('done');
+
+        li.innerHTML = `
+            <strong>${task.title}</strong>
+            <div>${task.description}</div>
+            <div class="meta">Priority: ${task.priority} | Category: ${task.category} | Due: ${task.dueDate}</div>
             <div class="actions">
-                <button class="done-btn">✔️</button>
-                <button class="delete-btn">🗑️</button>
+                <button onclick="markDone(${index})">Mark as Done</button>
+                <button onclick="deleteTask(${index})">Delete</button>
             </div>
         `;
 
-        taskItem.querySelector('.done-btn').addEventListener('click', () => {
-            taskItem.classList.toggle('completed');
-            taskItem.setAttribute(
-                'data-status',
-                taskItem.classList.contains('completed') ? 'completed' : 'pending'
-            );
-            saveTasks();
-        });
-
-        taskItem.querySelector('.delete-btn').addEventListener('click', () => {
-            taskItem.remove();
-            saveTasks();
-        });
-
-        taskList.appendChild(taskItem);
-    };
-
-    addTaskBtn.addEventListener('click', () => {
-        const title = document.getElementById('taskName').value.trim();
-        const description = document.getElementById('taskDescription').value.trim();
-        const category = document.getElementById('taskCategory').value.trim();
-        const date = document.getElementById('taskDate').value;
-        const priority = document.getElementById('taskPriority').value;
-
-        if (!title || !date) {
-            alert('Please enter at least a title and due date.');
-            return;
-        }
-
-        const newTask = {
-            title,
-            description,
-            category,
-            date,
-            priority,
-            status: 'pending'
-        };
-
-        addTaskToDOM(newTask);
-        saveTasks();
-
-        document.getElementById('taskName').value = '';
-        document.getElementById('taskDescription').value = '';
-        document.getElementById('taskCategory').value = 'Health';
-        document.getElementById('taskDate').value = '';
-        document.getElementById('taskPriority').value = 'Medium';
+        taskList.appendChild(li);
     });
+}
 
-    document.querySelectorAll('.filter-btn').forEach(button => {
-        button.addEventListener('click', () => {
-            const filter = button.getAttribute('data-filter');
-            const tasks = document.querySelectorAll('#taskList .task-item');
-            const today = new Date().toISOString().split('T')[0];
+function markDone(index) {
+    tasks[index].done = !tasks[index].done;
+    renderTasks(currentFilter);
+}
 
-            tasks.forEach(task => {
-                const taskDate = task.getAttribute('data-date');
-                const status = task.getAttribute('data-status');
-                let show = false;
+function deleteTask(index) {
+    tasks.splice(index, 1);
+    renderTasks(currentFilter);
+}
 
-                switch (filter) {
-                    case 'all':
-                        show = true;
-                        break;
-                    case 'today':
-                        show = taskDate === today;
-                        break;
-                    case 'pending':
-                        show = status === 'pending';
-                        break;
-                    case 'completed':
-                        show = status === 'completed';
-                        break;
-                    case 'upcoming':
-                        show = taskDate > today && status !== 'completed';
-                        break;
-                }
-
-                task.style.display = show ? '' : 'none';
-            });
-        });
+let currentFilter = "all";
+document.querySelectorAll('.filters button').forEach(button => {
+    button.addEventListener('click', () => {
+        currentFilter = button.dataset.view;
+        renderTasks(currentFilter);
     });
-
-    // Show current date in header
-    const currentDate = new Date();
-    document.getElementById('currentDate').textContent = currentDate.toDateString();
-
-    // Load existing tasks
-    loadTasks();
 });
+
+// Display current date
+document.getElementById("currentDate").textContent = new Date().toDateString();
+
+// Initial render
+renderTasks();
+
